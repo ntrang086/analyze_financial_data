@@ -2,6 +2,7 @@
 
 import os
 import pandas as pd
+import matplotlib.pyplot as plt
 
 def symbol_to_path(symbol, base_dir="../../data"):
     """Return CSV file path given ticker symbol."""
@@ -29,9 +30,23 @@ def get_data(symbols, dates):
     return df
 
 
+def plot_data(df, title="Stock prices"):
+    """Plot stock prices with a custom title and meaningful axis labels."""
+    ax = df.plot(title=title, fontsize=12)
+    ax.set_xlabel("Date")
+    ax.set_ylabel("Price")
+    plt.show()
+
+
+def plot_selected(df, columns, start_index, end_index):
+    """Plot the desired columns over index values in the given range."""
+    plot_data(df.ix[start_index:end_index, columns])
+
+
+
 def test_run():
     # Define a date range
-    dates = pd.date_range('2010-01-22', '2010-01-26')
+    dates = pd.date_range('2010-01-22', '2010-12-31')
 
     # Choose stock symbols to read
     symbols = ['GOOG', 'IBM', 'GLD']
@@ -40,6 +55,8 @@ def test_run():
     df = get_data(symbols, dates)
     print (df)
 
+    # Slice and plot
+    plot_selected(df, ['SPY', 'IBM'], '2010-03-01', '2010-04-01')
 
 if __name__ == "__main__":
     test_run()
