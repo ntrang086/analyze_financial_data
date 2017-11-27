@@ -1,15 +1,25 @@
 # Explore and analyze stock data using Python
 
 There are nine parts:
+
 1 Reading, slicing and plotting stock data
+
 2 Working with many stocks at once
+
 3 Using Numpy
+
 4 Statistical analysis of time series
+
 5 Incomplete data
+
 6 Histograms and scatter plots
+
 7 Sharpe ratio & other portfolio statistics
+
 8 Optimizers: Building a parameterized model
+
 9 Optimizers: Optimizing a portfolio
+
 
 ## Setup
 
