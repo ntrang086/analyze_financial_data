@@ -30,6 +30,11 @@ def get_data(symbols, dates):
     return df
 
 
+def normalize_data(df):
+    """Normalize stock prices using the first row of the dataframe"""
+    return df/df.ix[0,:]
+
+
 def plot_data(df, title="Stock prices"):
     """Plot stock prices with a custom title and meaningful axis labels."""
     ax = df.plot(title=title, fontsize=12)
@@ -43,7 +48,6 @@ def plot_selected(df, columns, start_index, end_index):
     plot_data(df.ix[start_index:end_index, columns])
 
 
-
 def test_run():
     # Define a date range
     dates = pd.date_range('2010-01-22', '2010-12-31')
@@ -53,10 +57,13 @@ def test_run():
     
     # Get stock data
     df = get_data(symbols, dates)
+
+    # Normalize the stock data
+    df = normalize_data(df)
     print (df)
 
     # Slice and plot
-    plot_selected(df, ['SPY', 'IBM'], '2010-03-01', '2010-04-01')
+    plot_selected(df, ['SPY', 'IBM'], '2010-01-22', '2010-04-01')
 
 if __name__ == "__main__":
     test_run()
