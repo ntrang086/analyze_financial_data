@@ -42,17 +42,33 @@ def get_bollinger_bands(rm, rstd):
     return upper_band, lower_band    
 
 
+def compute_daily_returns(df):
+    """Compute and return the daily return values"""
+    daily_returns = df.pct_change()
+    daily_returns.ix[0,:] = 0
+    print (daily_returns)
+    return daily_returns
+
+
+def plot_data(df, title="Stock prices", xlabel="Date", ylabel="Price"):
+    """Plot stock prices with a custom title and meaningful axis labels."""
+    ax = df.plot(title=title, fontsize=12)
+    ax.set_xlabel("Date")
+    ax.set_ylabel("Price")
+    plt.show()
+
+
 def test_run():
     # Define a date range
     dates = pd.date_range('2012-01-01', '2012-12-31')
 
     # Choose stock symbols to read
-    symbols = ['SPY']
+    symbols = ['SPY', 'XOM']
     
     # Get stock data
     df = get_data(symbols, dates)
 
-    # Compute Bollinger Bands
+    # Compute Bollinger Bands for SPY
     # 1. Compute rolling mean
     rm_SPY = df['SPY'].rolling(window=20).mean()
 
@@ -73,6 +89,10 @@ def test_run():
     ax.set_ylabel("Price")
     ax.legend(loc='upper left')
     plt.show()
+
+    # Compute and plot daily returns for SPY and XOM
+    daily_returns = compute_daily_returns(df)
+    plot_data(daily_returns, title="Daily returns", ylabel="Daily returns")
 
 
 if __name__ == "__main__":
