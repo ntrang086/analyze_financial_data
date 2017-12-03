@@ -96,6 +96,8 @@ def test_run():
     plt.show()
     """
 
+    # Calculate the correlation coefficient
+    print (daily_returns.corr(method="pearson"))
 
 if __name__ == "__main__":
     test_run()
