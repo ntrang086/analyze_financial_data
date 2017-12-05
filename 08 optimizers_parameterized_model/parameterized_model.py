@@ -81,6 +81,7 @@ def fit_poly(data, error_func, degree=3):
 
 
 def test_run():
+    """Build a line model"""
     # Define original line
     l_orig = np.float32([4,2])
     print ("Original line: m = {}, b = {}".format(l_orig[0], l_orig[1]))
@@ -103,6 +104,30 @@ def test_run():
     plt.legend(loc="upper left")
     plt.show()
     
+
+    """Build a polynomial model"""
+    # Define original polynomial
+    poly_orig = np.poly1d([1.5, -10, -5, 60, 50])
+    print ("Original polynomial:\n", poly_orig)
+    X_poly_orig = np.linspace(-5, 5, 21)
+    Y_poly_orig = np.polyval(poly_orig, X_poly_orig)
+    plt.plot(X_poly_orig, Y_poly_orig, "b--", linewidth=2.0, label="Original polynomial")
+
+    # Generate noisy data points from a normal distribution
+    scale_poly = 3.0 # Standard deviation (spread or “width”) of the distribution
+    noise_poly = np.random.normal(0.0, scale_poly, Y_poly_orig.shape)
+    data_poly = np.asarray([X_poly_orig, Y_poly_orig + noise_poly]).T
+    plt.plot(data_poly[:, 0], data_poly[:, 1], "go", label="Data points")
+
+    # Try to fit a polynomial to this data
+    poly_fit = fit_poly(data_poly, error_poly, degree=4)
+    print ("Fitted polynomial:\n", poly_fit)
+    plt.plot(data_poly[:, 0], np.polyval(poly_fit, data_poly[:, 0]), "r--", linewidth=2.0, label="Fitted polynomial")
+
+    # Add a legend and show plot
+    plt.legend(loc="upper left")  
+    plt.show()
+
 
 if __name__ == "__main__":
     test_run()
