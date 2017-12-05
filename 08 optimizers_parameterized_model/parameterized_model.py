@@ -6,7 +6,7 @@ import numpy as np
 import scipy.optimize as spo
 
 
-def error(coefficients, data):
+def error_line(coefficients, data):
 	"""Compute error between given line model f(x) = mx + b and observed data
 
 	Parameters:
@@ -15,6 +15,7 @@ def error(coefficients, data):
 	
 	Returns error as a single real value
 	"""
+	
 	# Error = sum of squared differences between actual Y-axis data and estimated data by the line model
 	err = np.sum((data[:, 1] - (coefficients[0] * data[:, 0] + coefficients[1]))**2)
 	return err
@@ -29,6 +30,7 @@ def fit_line(data, error_func):
 
 	Returns line that minimizes the error function
 	"""
+	
 	# Generate initial guess for line model
 	l = np.float32([0, np.mean(data[:, 1])]) # m = 0, b = mean of the data
 
@@ -39,6 +41,43 @@ def fit_line(data, error_func):
 	# Call optimizer to minimize error function
 	result = spo.minimize(error_func, l, args=(data,), method="SLSQP", options={"disp": True}) # args: used to pass data to error_func
 	return result.x
+
+
+def error_poly(coefficients, data):
+	"""Compute error between given polynomial model and observed data
+
+	Parameters:
+	coefficients: numpy.poly1d object or equivalent array representing polynomial coefficients
+	data: 2D array where each row is a point (x, y)
+	
+	Returns error as a single real value
+	"""
+
+	# Error = sum of squared differences between actual Y-axis data and estimated data by the line model
+	err = np.sum((data[:, 1] - np.polyval(coefficients, data[:, 0]))**2)
+	return err
+
+
+def fit_poly(data, error_func, degree=3):
+	"""Fit a polynomial to given data, using a supplied error function.
+	
+	Parameters:
+	data: 2D array where each row is a point (x, y)
+	error_func: function that computes the error between a polynomial and observed data
+
+	Returns polynomial that minimizes the error function
+	"""
+
+	# Generate initial guess for polynomial model
+	poly_guess = np.poly1d(np.ones(degree + 1, dtype=np.float32))
+
+	# Plot initial guess
+	x_initial_guess = np.linspace(-5, 5, 21)
+	plt.plot(x_initial_guess, np.polyval(poly_guess, x_initial_guess), "m--", linewidth=2.0, label="Initial guess")
+
+	# Call optimizer to minimize error function
+	result = spo.minimize(error_func, poly_guess, args=(data,), method="SLSQP", options={"disp": True}) # args: used to pass data to error_func
+	return np.poly1d(result.x)
 
 
 def test_run():
@@ -56,7 +95,7 @@ def test_run():
     plt.plot(data[:, 0], data[:, 1], "go", label="Data points")
 
     # Try to fit a line to this data
-    l_fit = fit_line(data, error)
+    l_fit = fit_line(data, error_line)
     print ("Fitted line: m = {}, b = {}".format(l_fit[0], l_fit[1]))
     plt.plot(data[:, 0], l_fit[0] * data[:, 0] + l_fit[1], "r--", linewidth=2.0, label="Fitted line")
 
