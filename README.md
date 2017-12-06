@@ -18,7 +18,11 @@ There are nine parts:
 
 8 Optimizers: Building a parameterized model
 
-9 Optimizers: Optimizing a portfolio
+9 Projects:
+
+a) Portfolio analysis
+
+b) Optimizing a portfolio
 
 
 ## Setup
