@@ -39,18 +39,8 @@ def assess_portfolio(sd = dt.datetime(2008,1,1), ed = dt.datetime(2009,1,1), \
     prices = prices_all[syms]  # only portfolio symbols
     prices_SPY = prices_all["SPY"]  # only SPY, for comparison later
 
-    # Normalize the prices according to the first day
-    norm_prices = normalize_data(prices)
-
-    # Compute prices based on the allocations
-    alloc_prices = norm_prices * allocs
-
-    # Calculate position values
-    pos_vals = alloc_prices * sv
-
     # Get daily portfolio value
-    port_val = pos_vals.sum(axis=1).to_frame()
-    port_val.columns = ["port_val"]
+    port_val = get_portfolio_value(prices, allocs, sv)
 
     # Get portfolio statistics (sddr == volatility)
     cr = port_val.ix[-1, 0]/port_val.ix[0, 0] - 1
@@ -72,6 +62,34 @@ def assess_portfolio(sd = dt.datetime(2008,1,1), ed = dt.datetime(2009,1,1), \
     ev = port_val.ix[-1, 0]
 
     return cr, adr, sddr, sr, ev
+
+
+def get_portfolio_value(prices, allocs, sv):
+    """Helper function to compute portfolio value
+
+    Parameters:
+    prices: Adjusted closing prices for portfolio symbols
+    allocs: A list of allocations to the stocks, must sum to 1.0
+    sv: Start value of the portfolio
+    
+    Returns:
+    portfolio value: A dataframe object
+    """
+
+    # Normalize the prices according to the first day
+    norm_prices = normalize_data(prices)
+
+    # Compute prices based on the allocations
+    alloc_prices = norm_prices * allocs
+
+    # Calculate position values
+    pos_vals = alloc_prices * sv
+
+    # Get daily portfolio value
+    port_val = pos_vals.sum(axis=1).to_frame()
+    port_val.columns = ["port_val"]
+
+    return port_val
 
 
 def test_code():
