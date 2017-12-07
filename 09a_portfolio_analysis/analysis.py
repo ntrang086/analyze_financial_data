@@ -43,12 +43,7 @@ def assess_portfolio(sd = dt.datetime(2008,1,1), ed = dt.datetime(2009,1,1), \
     port_val = get_portfolio_value(prices, allocs, sv)
 
     # Get portfolio statistics (sddr == volatility)
-    cr = port_val.ix[-1, 0]/port_val.ix[0, 0] - 1
-
-    daily_returns = compute_daily_returns(port_val)[1:]
-    adr = daily_returns["port_val"].mean()
-    sddr = daily_returns["port_val"].std()
-    sr = compute_sharpe_ratio(np.sqrt(sf), adr, rfr, sddr)
+    cr, adr, sddr, sr = get_portfolio_stats(port_val, rfr, sf)
 
     # Compare daily portfolio value with SPY using a normalized plot
     if gen_plot:
@@ -73,7 +68,7 @@ def get_portfolio_value(prices, allocs, sv):
     sv: Start value of the portfolio
     
     Returns:
-    portfolio value: A dataframe object
+    port_val: A dataframe object showing the portfolio value for each day
     """
 
     # Normalize the prices according to the first day
@@ -90,6 +85,30 @@ def get_portfolio_value(prices, allocs, sv):
     port_val.columns = ["port_val"]
 
     return port_val
+
+
+def get_portfolio_stats(port_val, daily_rf, samples_per_year):
+    """Helper function to compute portfolio statistics
+
+    Parameters:
+    port_val: Portfolio value
+    daily_rf: Daily risk-free rate, assuming it does not change
+    samples_per_year: Sampling frequency per year
+    
+    Returns:
+    cr: Cumulative return
+    adr: Average daily return
+    sddr: Standard deviation of daily return
+    sr: Sharpe ratio
+    """
+    cr = port_val.ix[-1, 0]/port_val.ix[0, 0] - 1
+
+    daily_returns = compute_daily_returns(port_val)[1:]
+    adr = daily_returns["port_val"].mean()
+    sddr = daily_returns["port_val"].std()
+    sr = compute_sharpe_ratio(np.sqrt(samples_per_year), adr, daily_rf, sddr)
+
+    return cr, adr, sddr, sr
 
 
 def test_code():
