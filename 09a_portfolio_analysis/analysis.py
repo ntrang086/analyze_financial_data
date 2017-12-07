@@ -49,9 +49,7 @@ def assess_portfolio(sd = dt.datetime(2008,1,1), ed = dt.datetime(2009,1,1), \
     if gen_plot:
         # Create a temporary dataframe with both the SPY and Portfolio
         df_temp = pd.concat([port_val, prices_SPY], keys=["Portfolio", "SPY"], axis=1)
-        # Normalize the data
-        df_temp = normalize_data(df_temp)
-        plot_data(df_temp, title="Daily portfolio and SPY", ylabel="Normalized price")
+        plot_normalized_data(df_temp, title="Daily portfolio and SPY", xlabel="Date", ylabel="Normalized price")    
 
     # Compute end value
     ev = port_val.ix[-1, 0]
@@ -109,6 +107,16 @@ def get_portfolio_stats(port_val, daily_rf, samples_per_year):
     sr = compute_sharpe_ratio(np.sqrt(samples_per_year), adr, daily_rf, sddr)
 
     return cr, adr, sddr, sr
+
+
+def plot_normalized_data(df, title, xlabel, ylabel):
+    """Helper function to normalize and plot data"""
+
+    # Normalize the data
+    df = normalize_data(df)
+
+    # Plot the normalized data
+    plot_data(df, title=title, xlabel=xlabel, ylabel=ylabel)
 
 
 def test_code():
