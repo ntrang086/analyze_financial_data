@@ -32,7 +32,7 @@ def get_data(symbols, dates):
 
 def normalize_data(df):
     """Normalize stock prices using the first row of the dataframe"""
-    return df/df.ix[0,:]
+    return df/df.iloc[0,:]
 
 
 def plot_data(df, title="Stock prices"):
@@ -45,7 +45,7 @@ def plot_data(df, title="Stock prices"):
 
 def plot_selected(df, columns, start_index, end_index):
     """Plot the desired columns over index values in the given range."""
-    plot_data(df.ix[start_index:end_index, columns])
+    plot_data(df.loc[start_index:end_index, columns])
 
 
 def test_run():

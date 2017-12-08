@@ -45,7 +45,7 @@ def get_bollinger_bands(rm, rstd):
 def compute_daily_returns(df):
     """Compute and return the daily return values"""
     daily_returns = df.pct_change()
-    daily_returns.ix[0,:] = 0
+    daily_returns.iloc[0,:] = 0
     return daily_returns
 
 

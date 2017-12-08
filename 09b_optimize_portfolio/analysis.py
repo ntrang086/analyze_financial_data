@@ -99,7 +99,7 @@ def get_portfolio_stats(port_val, daily_rf, samples_per_year):
     sddr: Standard deviation of daily return
     sr: Sharpe ratio
     """
-    cr = port_val.ix[-1, 0]/port_val.ix[0, 0] - 1
+    cr = port_val.iloc[-1, 0]/port_val.iloc[0, 0] - 1
 
     daily_returns = compute_daily_returns(port_val)[1:]
     adr = daily_returns["port_val"].mean()
