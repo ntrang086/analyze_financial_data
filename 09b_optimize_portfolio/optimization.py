@@ -69,30 +69,3 @@ def get_negative_sharpe_ratio(allocs, prices, sv=1000000, rfr=0.0, sf=252):
     neg_sr = get_portfolio_stats(port_val, rfr, sf)[3] * (-1)
 
     return neg_sr
-
-
-def test_code():
-    # Test the above code
-
-    # Define input parameters
-    start_date = dt.datetime(2010,1,1)
-    end_date = dt.datetime(2010,12,31)
-    symbols = ["GOOG", "AAPL", "GLD", "XOM"]
-
-    # Assess the portfolio
-    allocations, cr, adr, sddr, sr = optimize_portfolio(sd = start_date, ed = end_date,\
-        syms = symbols, \
-        gen_plot = True)
-
-    # Print statistics
-    print ("Start Date:", start_date)
-    print ("End Date:", end_date)
-    print ("Symbols:", symbols)
-    print ("Allocations:", allocations)
-    print ("Sharpe Ratio:", sr)
-    print ("Volatility (stdev of daily returns):", sddr)
-    print ("Average Daily Return:", adr)
-    print ("Cumulative Return:", cr)
-
-if __name__ == "__main__":
-    test_code()
