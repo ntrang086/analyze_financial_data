@@ -12,12 +12,14 @@ from analysis import *
 def optimize_portfolio(sd=dt.datetime(2008,1,1), ed=dt.datetime(2009,1,1), \
     syms=["GOOG","AAPL","GLD","XOM"], gen_plot=False):
 
-    """Assess a portfolio by computing statistics
+    """Optimize a portfolio and compute its statistics
+
     Parameters:
     sd: A datetime object that represents the start date
     ed: A datetime object that represents the end date
     syms: A list of symbols that make up the portfolio
     gen_plot: If True, create a plot named plot.png
+
     Returns:
     allocs: A list of allocations to the stocks, must sum to 1.0
     cr: Cumulative return
@@ -33,17 +35,17 @@ def optimize_portfolio(sd=dt.datetime(2008,1,1), ed=dt.datetime(2009,1,1), \
     prices_SPY = prices_all["SPY"]  # only SPY, for comparison later
 
     # find the allocations for the optimal portfolio
-    allocs = np.asarray([0.2, 0.2, 0.3, 0.3, 0.0]) # add code here to find the allocations
-    cr, adr, sddr, sr = [0.25, 0.001, 0.0005, 2.1] # add code here to compute stats
+    allocs = find_optimal_allocations(prices, get_negative_sharpe_ratio, syms)
 
     # Get daily portfolio value
-    port_val = prices_SPY # add code here to compute daily portfolio values
+    port_val = get_portfolio_value(prices, allocs, sv=1000000)
+    cr, adr, sddr, sr = get_portfolio_stats(port_val, daily_rf=0.0, samples_per_year=252)
 
     # Compare daily portfolio value with SPY using a normalized plot
     if gen_plot:
         # add code to plot here
         df_temp = pd.concat([port_val, prices_SPY], keys=["Portfolio", "SPY"], axis=1)
-        pass
+        plot_normalized_data(df_temp, title="Daily portfolio and SPY", xlabel="Date", ylabel="Normalized price")    
 
     return allocs, cr, adr, sddr, sr
 
