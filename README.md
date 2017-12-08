@@ -20,14 +20,14 @@ There are nine parts:
 
 9 Projects:
 
-a) Portfolio analysis
+a) Portfolio analysis: Assess a portfolio by computing statistics such as cumulative return, average period return, standard deviation, Sharpe ratio and end value of portfolio
 
-b) Optimizing a portfolio
+b) Optimizing a portfolio: Find an optimal allocation of stocks in a portfolio and compute its statistics
 
 
 ## Setup
 
-You need Python 2.7+, and the following packages: pandas, numpy, matplotlib.
+You need Python 2.7+, and the following packages: pandas, numpy, scipy and matplotlib.
 
 
 ## Data
