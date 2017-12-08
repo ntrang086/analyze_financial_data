@@ -4,6 +4,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 import datetime as dt
+import scipy.optimize as spo
 from util import *
 from analysis import *
 
@@ -12,13 +13,11 @@ def optimize_portfolio(sd=dt.datetime(2008,1,1), ed=dt.datetime(2009,1,1), \
     syms=["GOOG","AAPL","GLD","XOM"], gen_plot=False):
 
     """Assess a portfolio by computing statistics
-
     Parameters:
     sd: A datetime object that represents the start date
     ed: A datetime object that represents the end date
     syms: A list of symbols that make up the portfolio
     gen_plot: If True, create a plot named plot.png
-
     Returns:
     allocs: A list of allocations to the stocks, must sum to 1.0
     cr: Cumulative return
@@ -49,6 +48,27 @@ def optimize_portfolio(sd=dt.datetime(2008,1,1), ed=dt.datetime(2009,1,1), \
     return allocs, cr, adr, sddr, sr
 
 
+def find_optimal_allocations(prices, function, syms):
+    bounds = ((0,1),(0,1),(0,1),(0,1))
+
+    constraints = ({'type': 'eq', 'fun': lambda x:  np.sum(x)-1.0})
+
+    initial_guess = np.ones((len(syms)), dtype=np.float32)/(len(syms))
+
+    result = spo.minimize(function, initial_guess, args=(prices,), method='SLSQP', constraints=constraints, bounds=bounds)
+    return result.x
+
+
+def get_negative_sharpe_ratio(allocs, prices, sv=1000000, rfr=0.0, sf=252):
+    # Get daily portfolio value
+    port_val = get_portfolio_value(prices, allocs, sv)
+
+    # Get portfolio statistics
+    neg_sr = get_portfolio_stats(port_val, rfr, sf)[3] * (-1)
+
+    return neg_sr
+
+
 def test_code():
     # Test the above code
 
@@ -60,7 +80,7 @@ def test_code():
     # Assess the portfolio
     allocations, cr, adr, sddr, sr = optimize_portfolio(sd = start_date, ed = end_date,\
         syms = symbols, \
-        gen_plot = False)
+        gen_plot = True)
 
     # Print statistics
     print ("Start Date:", start_date)
