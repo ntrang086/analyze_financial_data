@@ -5,8 +5,11 @@ import matplotlib.pyplot as plt
 import numpy as np
 import datetime as dt
 import scipy.optimize as spo
-from util import *
 from analysis import *
+import sys
+# Append the path of the directory one level above the current directory to import util
+sys.path.append('../')
+from util import *
 
 
 def optimize_portfolio(sd=dt.datetime(2008,1,1), ed=dt.datetime(2009,1,1), \
